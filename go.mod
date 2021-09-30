@@ -1,4 +1,4 @@
-module github.com/shawnH/blockVerifier
+module shawnH/blockverifier
 
 go 1.13
 

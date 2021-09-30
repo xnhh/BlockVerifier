@@ -1,4 +1,4 @@
-package blockVerifier
+package blockverifier
 
 type Block struct {
 	Hash string `json:"hash"`
