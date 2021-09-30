@@ -7,6 +7,7 @@ import (
 var (
 	BlockHashFlag = &cli.StringFlag{
 		Name:  "blockhash, bh",
-		Usage: "the block hash to get a block",
+		Value: "",
+		Usage: "verify the block from `blockhash`",
 	}
 )

@@ -8,7 +8,9 @@ func verifyCommand() cli.Command {
 	command := cli.Command{
 		Name:  "verify",
 		Usage: "verify a btc block",
-
+		Flags: []cli.Flag{
+			BlockHashFlag,
+		},
 		Action: verify,
 	}
 	return command
