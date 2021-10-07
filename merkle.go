@@ -1,30 +1,8 @@
 package blockverifier
 
 import (
-	"crypto/sha256"
-	"log"
 	. "shawnH/blockverifier/util"
 )
-
-func doubleSha256(origin []byte) []byte {
-	h := sha256.New()
-	mid := sha256.Sum256(origin)
-	h.Write(mid[:])
-	res := h.Sum(nil)
-	return res[:]
-}
-
-func reverse(origin []byte) []byte {
-	i, j := 0, len(origin)-1
-	for i < j {
-		temp := origin[i]
-		origin[i] = origin[j]
-		origin[j] = temp
-		i++
-		j--
-	}
-	return origin
-}
 
 type Node struct {
 	hash                []byte
@@ -50,9 +28,9 @@ func InitMerkleTree(hashes []string) *Node {
 		}
 		// log.Printf("the transaction with index %d has hash: %s\n", i, hashes[i])
 	}
-	log.Printf("the transaction with index 0 has hash: %s\n", hashes[0])
+	// log.Printf("the transaction with index 0 has hash: %s\n", hashes[0])
 	for len(layer) > 1 {
-		log.Printf("layer size: %d, and the first node hash: %x, the last node has hash: %x\n", len(layer), layer[0].hash, layer[len(layer)-1].hash)
+		// log.Printf("layer size: %d, and the first node hash: %x, the last node has hash: %x\n", len(layer), layer[0].hash, layer[len(layer)-1].hash)
 		layer = getMerkleRoot(layer)
 	}
 
@@ -69,19 +47,18 @@ func getMerkleRoot(nodes []*Node) []*Node {
 			left: nodes[i],
 		}
 		if i+1 == length {
-			reverse(nodes[i].hash)
+			Reverse(nodes[i].hash)
 			new2Hash = append(nodes[i].hash, nodes[i].hash...)
-			reverse(nodes[i].hash)
-			log.Printf("%x\n", new2Hash)
+			Reverse(nodes[i].hash)
 			newNode.right = nodes[i]
 		} else {
-			new2Hash = append(reverse(nodes[i].hash), reverse(nodes[i+1].hash)...)
-			reverse(nodes[i].hash)
-			reverse(nodes[i+1].hash)
+			new2Hash = append(Reverse(nodes[i].hash), Reverse(nodes[i+1].hash)...)
+			Reverse(nodes[i].hash)
+			Reverse(nodes[i+1].hash)
 			newNode.right = nodes[i+1]
 			nodes[i+1].parent = newNode
 		}
-		newNode.hash = reverse(doubleSha256(new2Hash))
+		newNode.hash = Reverse(DoubleSha256(new2Hash))
 		nodes[i].parent = newNode
 
 		res[i/2] = newNode

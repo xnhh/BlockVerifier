@@ -3,21 +3,21 @@ package model
 type Block struct {
 	Hash string `json:"hash"`
 
-	Version int64 `json:"ver"`
+	Version uint64 `json:"ver"`
 
 	PreviousBlockHash string `json:"prev_block"`
 
 	MerkleRoot string `json:"mrkl_root"`
 
-	Ts int64 `json:"time"`
+	Ts uint64 `json:"time"`
 
-	Bits int64 `json:"bits"`
+	Bits uint64 `json:"bits"`
 
 	NextBlockHashes []string `json:"next_block"`
 
 	Fee int64 `json:"fee"`
 
-	Nonce int64 `json:"nonce"`
+	Nonce uint64 `json:"nonce"`
 
 	TransactionsNum int16 `json:"n_tx"`
 
