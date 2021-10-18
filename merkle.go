@@ -1,6 +1,7 @@
 package blockverifier
 
 import (
+	"fmt"
 	. "shawnH/blockverifier/util"
 )
 
@@ -50,7 +51,7 @@ func getMerkleRoot(nodes []*Node) []*Node {
 			Reverse(nodes[i].hash)
 			new2Hash = append(nodes[i].hash, nodes[i].hash...)
 			Reverse(nodes[i].hash)
-			newNode.right = nodes[i]
+			newNode.right = nil
 		} else {
 			new2Hash = append(Reverse(nodes[i].hash), Reverse(nodes[i+1].hash)...)
 			Reverse(nodes[i].hash)
@@ -65,4 +66,24 @@ func getMerkleRoot(nodes []*Node) []*Node {
 		i += 2
 	}
 	return res
+}
+
+func PrintMerkleTree(nodes []*Node, layer int) {
+	length := len(nodes)
+	if length == 0 {
+		return
+	}
+	fmt.Printf("layer %d: ", layer)
+	nextNodes := make([]*Node, 0)
+	for _, node := range nodes {
+		fmt.Printf("%x ", node.hash[0:2])
+		if node.left != nil {
+			nextNodes = append(nextNodes, node.left)
+		}
+		if node.right != nil {
+			nextNodes = append(nextNodes, node.right)
+		}
+	}
+	fmt.Print("\n")
+	PrintMerkleTree(nextNodes, layer+1)
 }

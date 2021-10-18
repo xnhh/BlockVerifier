@@ -20,12 +20,20 @@ func VerifyBlockHash(block *Block) error {
 		// log.Printf("the transaction with index %d has hash: %s\n", i, block.Transactions[i].Hash)
 	}
 	root := InitMerkleTree(hashes)
+	fmt.Println()
 	if bytes.Equal(root.hash, String2ByteArray(block.MerkleRoot)) {
-		log.Printf("Step1: the merkle root hash is true, the merkle tree is _\n")
+		fmt.Printf("Step1: verify the merkle root hash, it is %s \n", block.MerkleRoot)
+		fmt.Printf("Build the merkle root hash with transactions, the merkle tree is: (Use the first 2 bytes of hash to present) \n")
+		PrintMerkleTree([]*Node{root}, 0)
 	} else {
 		// log.Fatalf("Error: the merkle root hash is %x, but the correct one is %s\n", root.hash, block.MerkleRoot)
 		return fmt.Errorf("Error: the calculated merkle root hash is %x, but the correct one is %s\n", root.hash, block.MerkleRoot)
 	}
+	fmt.Printf("Verify the merkle root hash success. \n")
+	fmt.Println()
+
+	fmt.Printf("Step2: verify the block hash, it is %s \n", block.Hash)
+	fmt.Printf("The block message:\n")
 
 	//version
 	v := IntToHex(int32(block.Version))
@@ -66,14 +74,13 @@ func VerifyBlockHash(block *Block) error {
 	res := Reverse(DoubleSha256(all))
 
 	if bytes.Equal(res, String2ByteArray(block.Hash)) {
-		// log.Printf("!!!\n")
-		log.Printf("Step2: the block hash is true, it is %x\n", res)
+		fmt.Printf("Verify the block hash success, it is %x\n", res)
 	} else {
-		// log.Printf("!!!\n")
 		log.Fatalf("Error: the calculated block hash is %x, but the correct one is %s\n", res, block.Hash)
 		return fmt.Errorf("Error: the calculated block hash is %x, but the correct one is %s\n", res, block.Hash)
 	}
 	//log.Printf("Step2: the block hash is true, it is %x\n", block.Hash)
+	fmt.Println()
 
 	return nil
 }

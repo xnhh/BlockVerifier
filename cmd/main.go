@@ -2,10 +2,19 @@ package main
 
 import (
 	"log"
+	"os"
 	. "shawnH/blockverifier"
 	"shawnH/blockverifier/request"
 
 	"github.com/urfave/cli"
+)
+
+var (
+	BlockHashFlag = &cli.StringFlag{
+		Name:  "bh",
+		Value: "",
+		Usage: "verify the block from `blockhash`",
+	}
 )
 
 func verifyCommand() cli.Command {
@@ -22,6 +31,10 @@ func verifyCommand() cli.Command {
 
 func verify(ctx *cli.Context) {
 	blockHash := ctx.String(BlockHashFlag.Name)
+	if blockHash == "" {
+		log.Fatalf("No blockhash found, input a block's hash with flag -bh to verify.\n")
+		return
+	}
 	block := request.RequireBlockInfo(blockHash)
 	if err := VerifyBlockHash(block); err != nil {
 		log.Fatalf(err.Error())
@@ -32,20 +45,22 @@ func verify(ctx *cli.Context) {
 
 func main() {
 	app := cli.NewApp()
-	app.Usage = "Verify a block in BTC, use verify command and -w with the blockhash to verify."
+	app.Usage = "Verify a block in BTC, use verify command and -bh with the blockhash to verify."
 
-	app.Commands = []cli.Command{}
+	app.Commands = []cli.Command{verifyCommand()}
 
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:  "lang, l",
-			Value: "english",
-			Usage: "Language for the greeting",
-		},
-		cli.StringFlag{
-			Name:  "config, c",
-			Usage: "Load configuration from `FILE`",
-		},
-	}
+	// app.Flags = []cli.Flag{
+	// 	cli.StringFlag{
+	// 		Name:  "lang, l",
+	// 		Value: "english",
+	// 		Usage: "Language for the greeting",
+	// 	},
+	// 	cli.StringFlag{
+	// 		Name:  "config, c",
+	// 		Usage: "Load configuration from `FILE`",
+	// 	},
+	// }
+
+	app.Run(os.Args)
 
 }
